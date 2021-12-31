@@ -4,8 +4,42 @@ const mysql   = require('../mysql').conn;
 
 // select todos produtos
 router.get('/', (req, res, next) => {
-    res.status(200).send({
-        mensagem: 'GET produtos'
+
+    mysql.getConnection((error, conn) =>{ 
+        conn.query('select * from produtos;', (error, results, fields) =>{
+            conn.release();
+            if (error){
+                results.status(500).json({
+                    error: error,
+                    response: null
+                });
+            } else {
+                res.status(200).json({
+                   error: null, 
+                   response: results
+                });
+            }
+        });
+    });
+});
+
+router.get('/:idproduto', (req, res, next) => {
+
+    mysql.getConnection((error, conn) =>{ 
+        conn.query('select * from produtos where idproduto = ${ req.params.idproduto };', (error, results, fields) =>{
+            conn.release();
+            if (error){
+                results.status(500).json({
+                    error: error,
+                    response: null
+                });
+            } else {
+                res.status(200).json({
+                   error: null, 
+                   response: results
+                });
+            }
+        });
     });
 });
 
@@ -21,48 +55,68 @@ router.post('/', (req, res, next) => {
                     return res.status(500).send({
                         error: error,
                         response: null
-                    })
+                    });
                 }
-                res.status(200).send({
+                res.status(200).json({
                     mensagem: 'POST produtos insert',
                     idproduto: resultado.idproduto
                 });
             }
         )
-    })
+    });
    
 });
 
 
 // alterar um produtos
-router.patch('/', (req, res, next) => {
-    res.status(201).send({
-        mensagem: 'POST produtos patch'
+router.patch('/:idproduto', (req, res, next) => {
+    console.log (req.body.idproduto, req.body.nome, req.body.preco );
+
+    mysql.getConnection((error, conn) =>{ 
+        conn.query(`UPDATE produtos set nome = ? , preco = ? where idproduto = ? ;`, 
+        [req.body.nome, req.body.preco, req.body.idproduto],
+        (error, resultado, field) =>{
+                conn.release();
+                if (error){
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+                res.status(200).json({
+                    mensagem: 'POST produto update',
+                    idproduto: resultado.idproduto
+                });
+            }
+        )
     });
 });
 // delete um produtos
 router.delete('/', (req, res, next) => {
-    res.status(201).send({
-        mensagem: 'POST produtos delete'
+    console.log (req.body.idproduto);
+
+    mysql.getConnection((error, conn) =>{ 
+        conn.query(`delete from produtos where idproduto = ? ;`, 
+        [req.body.idproduto],
+        (error, resultado, field) =>{
+                conn.release();
+                if (error){
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+                res.status(200).json({
+                    mensagem: 'POST produto deletado',
+                    idproduto: resultado.idproduto
+                });
+            }
+        )
     });
+    
 });
 
 
-// select um produtos
-router.get('/:id', (req, res, next) => {
-    const id = req.params.id
-    if (id === '1'){
-        res.status(200).send({
-            mensagem: 'GET produtos id 1',
-            id: id
-        });
-    } else {
-        res.status(200).send({
-            mensagem: 'GET produtos id 2',
-            id: id
-        });
-    }
-});
 
 
 module.exports = router;
