@@ -24,20 +24,14 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:idproduto', (req, res, next) => {
-
+    console.log('idproduto: ',req.params.idproduto);
     mysql.getConnection((error, conn) =>{ 
-        conn.query('select * from produtos where idproduto = ${ req.params.idproduto };', (error, results, fields) =>{
+        conn.query(`select * from produtos where idproduto = ${req.params.idproduto };`, (error, results, fields) =>{
             conn.release();
             if (error){
-                results.status(500).json({
-                    error: error,
-                    response: null
-                });
+                 res.status(500).json({error: error, response: null});
             } else {
-                res.status(200).json({
-                   error: null, 
-                   response: results
-                });
+                 res.status(200).json({error: null, response: results});
             }
         });
     });
@@ -69,7 +63,7 @@ router.post('/', (req, res, next) => {
 
 
 // alterar um produtos
-router.patch('/:idproduto', (req, res, next) => {
+router.patch('/', (req, res, next) => {
     console.log (req.body.idproduto, req.body.nome, req.body.preco );
 
     mysql.getConnection((error, conn) =>{ 
