@@ -9,13 +9,9 @@ router.get('/', (req, res, next) => {
     });
 });
 
-
 // insert um produtos
 router.post('/', (req, res, next) => {
-
     console.log (req.body.nome, req.body.preco );
-
-
     mysql.getConnection((error, conn) =>{ 
         conn.query('INSERT INTO produtos (nome, preco) VALUES (?,?)', 
         [req.body.nome, req.body.preco],  

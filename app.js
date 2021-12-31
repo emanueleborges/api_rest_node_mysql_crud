@@ -15,9 +15,8 @@ app.use(morgan('dev')); // monitor de rotas
 app.use(bodyParser.urlencoded({extended: false })); //dados simples
 app.use(bodyParser.json()); // somente dados json
 
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'log_acessos.log'), { flags: 'a' })
 app.use(morgan('combined', { stream: accessLogStream })) 
-
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");

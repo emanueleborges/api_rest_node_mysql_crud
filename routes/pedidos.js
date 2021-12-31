@@ -8,7 +8,6 @@ router.get('/', (req, res, next) => {
     });
 });
 
-
 // insert um pedidos
 router.post('/', (req, res, next) => {
 
