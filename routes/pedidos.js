@@ -1,58 +1,112 @@
 const express = require('express');
 const router  = express.Router();
+const mysql   = require('../mysql').conn;
 
-// select todos pedidos
+// select todos produtos
 router.get('/', (req, res, next) => {
-    res.status(200).send({
-        mensagem: 'GET pedidos'
+
+    mysql.getConnection((error, conn) =>{ 
+        conn.query('select * from pedidos;', (error, results, fields) =>{
+            conn.release();
+            if (error){
+                results.status(500).json({
+                    error: error,
+                    response: null
+                });
+            } else {
+                res.status(200).json({
+                   error: null, 
+                   response: results
+                });
+            }
+        });
     });
 });
 
-// insert um pedidos
+router.get('/:idpedido', (req, res, next) => {
+    console.log('idpedido: ',req.params.idpedido);
+    mysql.getConnection((error, conn) =>{ 
+        conn.query(`select * from pedidos where idpedido = ${req.params.idpedido };`, (error, results, fields) =>{
+            conn.release();
+            if (error){
+                 res.status(500).json({error: error, response: null});
+            } else {
+                 res.status(200).json({error: null, response: results});
+            }
+        });
+    });
+});
+
+// insert um produtos
 router.post('/', (req, res, next) => {
-
-    const pedido = {
-        id      : req.body.id,
-        pedido  : req.body.pedido
-    };
-
-    res.status(201).send({
-        mensagem: 'POST pedidos',
-        pedidoCriado: pedido
-
+    console.log (req.body.nome, req.body.preco );
+    mysql.getConnection((error, conn) =>{ 
+        conn.query('INSERT INTO pedidos (idproduto, quantidade) VALUES (?,?)', 
+        [req.body.idproduto, req.body.quantidade],  
+        (error, resultado, field) =>{
+                conn.release();
+                if (error){
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+                res.status(200).json({
+                    mensagem: 'POST pedidos insert',
+                    idproduto: resultado.idpedido
+                });
+            }
+        )
     });
+   
 });
 
 
-// alterar um pedidos
+// alterar um produtos
 router.patch('/', (req, res, next) => {
-    res.status(201).send({
-        mensagem: 'POST pedidos patch'
+    console.log (req.body.idpedido, req.body.quantidade, req.body.idproduto );
+
+    mysql.getConnection((error, conn) =>{ 
+        conn.query(`UPDATE pedidos set idproduto = ? , quantidade = ? where idpedido = ? ;`, 
+        [req.body.idproduto, req.body.quantidade, req.body.idpedido],
+        (error, resultado, field) =>{
+                conn.release();
+                if (error){
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+                res.status(200).json({
+                    mensagem: 'POST peedidos update',
+                    idproduto: resultado.idpedido
+                });
+            }
+        )
     });
 });
-// delete um pedidos
+// delete um produtos
 router.delete('/', (req, res, next) => {
-    res.status(201).send({
-        mensagem: 'POST pedidos delete'
+    console.log (req.body.idproduto);
+
+    mysql.getConnection((error, conn) =>{ 
+        conn.query(`delete from pedidos where idpedido = ? ;`, 
+        [req.body.idproduto],
+        (error, resultado, field) =>{
+                conn.release();
+                if (error){
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+                res.status(200).json({
+                    mensagem: 'POST pedido deletado',
+                    idproduto: resultado.idpedido
+                });
+            }
+        )
     });
+    
 });
-
-
-// select um pedidos
-router.get('/:id', (req, res, next) => {
-    const id = req.params.id
-    if (id === '1'){
-        res.status(200).send({
-            mensagem: 'GET pedidos id 1',
-            id: id
-        });
-    } else {
-        res.status(200).send({
-            mensagem: 'GET pedidos id 2',
-            id: id
-        });
-    }
-});
-
-
 module.exports = router;
