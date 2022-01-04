@@ -3,27 +3,27 @@ const router  = express.Router();
 const mysql   = require('../mysql').conn;
 const autenticacao  = require('./autenticacao');
 
-// select todos produtos
-router.get('/', autenticacao, (req, res, next) => {
+// select todos produtos rota sem protecao
+router.get('/',  (req, res, next) => {
 
     mysql.getConnection((error, conn) =>{ 
         conn.query(`select * from pedidos inner join produtos on produtos.idproduto = pedidos.idproduto;`, (error, results, fields) =>{
             conn.release();
             if (error){
                 results.status(500).json({
-                    error: error,
+                    mensagem: error,
                     response: null
                 });
             } else {
                 res.status(200).json({
-                   error: null, 
+                   mensagem: 'lista de pedidos', 
                    response: results
                 });
             }
         });
     });
 });
-
+// select todos produtos rota com protecao
 router.get('/:idpedidos', autenticacao, (req, res, next) => {
     console.log('idpedidos: ',req.params.idpedido);
     mysql.getConnection((error, conn) =>{ 
@@ -38,7 +38,7 @@ router.get('/:idpedidos', autenticacao, (req, res, next) => {
     });
 });
 
-// insert um produtos
+// insert um produtos rota com protecao
 router.post('/', autenticacao, (req, res, next) => {
     console.log (req.body.nome, req.body.preco );
     mysql.getConnection((error, conn) =>{ 
@@ -64,7 +64,7 @@ router.post('/', autenticacao, (req, res, next) => {
 });
 
 
-// alterar um produtos
+// alterar um produtos rota com protecao
 router.patch('/', autenticacao, (req, res, next) => {
     console.log (req.body.idpedidos,req.body.quantidade );
 
@@ -87,7 +87,7 @@ router.patch('/', autenticacao, (req, res, next) => {
         )
     });
 });
-// delete um produtos
+// delete um produtos rota com protecao
 router.delete('/', autenticacao, (req, res, next) => {
     console.log (req.body.idproduto);
 

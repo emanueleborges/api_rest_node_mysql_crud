@@ -3,8 +3,8 @@ const router  = express.Router();
 const mysql   = require('../mysql').conn;
 const autenticacao  = require('./autenticacao');
 
-// select todos produtos
-router.get('/', autenticacao, (req, res, next) => {
+// select todos produtos rota sem token
+router.get('/',  (req, res, next) => {
     mysql.getConnection((error, conn) =>{ 
         conn.query(`select * from produtos;`, (error, results, fields) =>{
             conn.release();
@@ -22,7 +22,7 @@ router.get('/', autenticacao, (req, res, next) => {
         });
     });
 });
-
+// select um produto rota com token
 router.get('/:idproduto',  autenticacao, (req, res, next) => {
     console.log ('idusuarios logado: ', req.email.idusuarios)
     mysql.getConnection((error, conn) =>{ 
@@ -37,7 +37,7 @@ router.get('/:idproduto',  autenticacao, (req, res, next) => {
     });
 });
 
-// insert um produtos
+// insert um produtos rota com token
 router.post('/', autenticacao, (req, res, next) => {
     mysql.getConnection((error, conn) =>{ 
         conn.query(`INSERT INTO produtos (nome, preco, userid) VALUES (?,?,?)`, 
@@ -57,11 +57,8 @@ router.post('/', autenticacao, (req, res, next) => {
             }
         )
     });
-   
 });
-
-
-// alterar um produtos
+// alterar um produtos rota com token
 router.patch('/', autenticacao, (req, res, next) => {
     console.log (req.body.nome, req.body.preco, req.email.idusuarios, req.body.idproduto )
     mysql.getConnection((error, conn) =>{ 
@@ -83,7 +80,7 @@ router.patch('/', autenticacao, (req, res, next) => {
         )
     });
 });
-// delete um produtos
+// delete um produtos rota com token
 router.delete('/', autenticacao,  (req, res, next) => {
     mysql.getConnection((error, conn) =>{ 
         conn.query(`DELETE from PRODUTOS where idproduto = ? ;`, 
@@ -103,7 +100,6 @@ router.delete('/', autenticacao,  (req, res, next) => {
             }
         )
     });
-    
 });
 
 module.exports = router;
