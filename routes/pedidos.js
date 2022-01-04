@@ -6,7 +6,7 @@ const mysql   = require('../mysql').conn;
 router.get('/', (req, res, next) => {
 
     mysql.getConnection((error, conn) =>{ 
-        conn.query('select * from pedidos;', (error, results, fields) =>{
+        conn.query('select * from pedidos inner join produtos on produtos.idproduto = pedidos.idproduto;', (error, results, fields) =>{
             conn.release();
             if (error){
                 results.status(500).json({
@@ -26,7 +26,7 @@ router.get('/', (req, res, next) => {
 router.get('/:idpedidos', (req, res, next) => {
     console.log('idpedidos: ',req.params.idpedido);
     mysql.getConnection((error, conn) =>{ 
-        conn.query(`select * from pedidos where idpedidos = ${req.params.idpedidos };`, (error, results, fields) =>{
+        conn.query(`select * from pedidos  inner join produtos on produtos.idproduto = pedidos.idproduto where idpedidos = ${req.params.idpedidos };`, (error, results, fields) =>{
             conn.release();
             if (error){
                  res.status(500).json({error: error, response: null});
@@ -41,6 +41,7 @@ router.get('/:idpedidos', (req, res, next) => {
 router.post('/', (req, res, next) => {
     console.log (req.body.nome, req.body.preco );
     mysql.getConnection((error, conn) =>{ 
+        
         conn.query('INSERT INTO pedidos (idproduto, quantidade) VALUES (?,?)', 
         [req.body.idproduto, req.body.quantidade],  
         (error, resultado, field) =>{

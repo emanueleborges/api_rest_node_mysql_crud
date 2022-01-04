@@ -32,7 +32,7 @@ app.use('/usuarios',rotaUsuarios);
 
 
 app.use((req, res, next) => {
-    const erro = new Error('Rota não encontrada, informada ou inexistente');
+    const erro = new Error('Rota nï¿½o encontrada, informada ou inexistente');
     erro.status(404);
     next(erro);
 });
@@ -47,6 +47,10 @@ app.use((error, req, res, next) => {
         })
     } 
 )
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin: *", "Access-Control-Allow-Headers","Access-Control-Allow-Headers", "Content-Type: application/json; charset=utf-8")
+  })
 
   
 module.exports = app;

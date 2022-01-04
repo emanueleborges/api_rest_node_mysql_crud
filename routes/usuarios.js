@@ -5,13 +5,21 @@ const bcrypt = require('bcrypt');
 
 
 router.post('/cadastro', (req, res, next) => {
+    
     mysql.getConnection((error, conn) =>{ 
-        if (error){ return res.status(500).send({ error: error});}
-            conn.query('select * from usuarios where email = ?', 
-            [req.body.email], (error, results) =>{
-            if (error){ return res.status(500).send({ error: error }); }
-            if (results.length > 0){res.status(401).send({ error: 'usuario ja cadastrado'}); }
+    
+        if (error){ return res.status(500).send({ error: error}) }
+
+        conn.query('select * from usuarios where email = ?', 
+            [req.body.email], (err, results) =>{
+            if (err){ 
+                return res.status(500).send({ error: err })
+            }
+            if (results.length > 0){ 
+                return res.status(401).send({ error: 'usuario ja cadastrado'}) 
+            }
         });
+
         bcrypt.hash(req.body.senha, 10, (errcrypt, hash) =>{
             if (errcrypt){ 
                 return res.status(500).send({ error: errcrypt }) 
@@ -31,18 +39,25 @@ router.post('/cadastro', (req, res, next) => {
 
 
 router.post('/login', (req, res, next) => {
-    mysql.getConnection(
-        (error, conn) =>{ 
+    mysql.getConnection((error, conn) => { 
         if (error){ return res.status(500).send({ error: error}) }
-            const sql = 'select * from usuarios where email = ?';
-            conn.query(sql,[req.body.email], (error, results, fields) =>{
+            const query = 'select * from usuarios where email = ?;';
+            conn.query(query,[req.body.email], (error, results) => {
                 conn.release();
-                if (error){ return res.status(500).send({ error: error }) }
-                if (results.length < 1){ return res.status(401).send({ error: 'Falha na Autenticação 0'}) }
-                bcrypt.compare(req.body.senha, results[0].senha, (err, result) =>{
-                if (err){ return res.status(401).send({ error: 'Falha na Auatenticacao 1.' }) }
-                if (result){ return res.status(200).send({ error: 'Autenticado com sucesso' }) }
-                return res.status(401).send({ error: 'Falha na Autenticacao 2.' });
+                if (error){ 
+                    return res.status(500).send({ error: error }) 
+                }
+                if (results.length < 1){ 
+                    return res.status(401).send({ mensagem: 'Falha na AutenticaÃ§Ã£o.'}) 
+                }
+                bcrypt.compare(req.body.senha,results[0].SENHA, (err, result) => {
+                    if (err) {
+                        throw err
+                      } else if (!result) {
+                         return res.status(404).send({ mensagem: 'Falha na Autenticacao.' })
+                      } else {
+                        return res.status(200).send({ mensagem: 'Autenticado com sucesso.' }) 
+                      }
             });
         });         
     });
