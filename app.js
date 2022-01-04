@@ -9,6 +9,8 @@ const path          = require('path');
 // importar rotas
 const rotaProdutos  = require('./routes/produtos');
 const rotaPedidos   = require('./routes/pedidos');
+const rotaUsuarios   = require('./routes/usuarios');
+
 
 // usar rotas
 app.use(morgan('dev')); // monitor de rotas 
@@ -26,9 +28,11 @@ app.use((req, res, next) => {
 
 app.use('/produtos',rotaProdutos);
 app.use('/pedidos',rotaPedidos);
+app.use('/usuarios',rotaUsuarios);
+
 
 app.use((req, res, next) => {
-    const erro = new Error('Rota n√£o encontrada');
+    const erro = new Error('Rota n„o encontrada, informada ou inexistente');
     erro.status(404);
     next(erro);
 });
