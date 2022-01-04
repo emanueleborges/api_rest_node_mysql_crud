@@ -23,10 +23,10 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.get('/:idpedido', (req, res, next) => {
-    console.log('idpedido: ',req.params.idpedido);
+router.get('/:idpedidos', (req, res, next) => {
+    console.log('idpedidos: ',req.params.idpedido);
     mysql.getConnection((error, conn) =>{ 
-        conn.query(`select * from pedidos where idpedido = ${req.params.idpedido };`, (error, results, fields) =>{
+        conn.query(`select * from pedidos where idpedidos = ${req.params.idpedidos };`, (error, results, fields) =>{
             conn.release();
             if (error){
                  res.status(500).json({error: error, response: null});
@@ -64,11 +64,11 @@ router.post('/', (req, res, next) => {
 
 // alterar um produtos
 router.patch('/', (req, res, next) => {
-    console.log (req.body.idpedido, req.body.quantidade, req.body.idproduto );
+    console.log (req.body.idpedidos,req.body.quantidade );
 
     mysql.getConnection((error, conn) =>{ 
-        conn.query(`UPDATE pedidos set idproduto = ? , quantidade = ? where idpedido = ? ;`, 
-        [req.body.idproduto, req.body.quantidade, req.body.idpedido],
+        conn.query(`UPDATE PEDIDOS set quantidade = ? where idpedidos = ?`, 
+        [req.body.quantidade, req.body.idpedidos],
         (error, resultado, field) =>{
                 conn.release();
                 if (error){
@@ -78,8 +78,8 @@ router.patch('/', (req, res, next) => {
                     });
                 }
                 res.status(200).json({
-                    mensagem: 'POST peedidos update',
-                    idproduto: resultado.idpedido
+                    mensagem: 'POST pedidos update',
+                    idproduto: resultado.idpedidos
                 });
             }
         )
