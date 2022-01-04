@@ -3,12 +3,11 @@ const router  = express.Router();
 const mysql   = require('../mysql').conn;
 const autenticacao  = require('./autenticacao');
 
-
 // select todos produtos
-router.get('/', (req, res, next) => {
+router.get('/', autenticacao, (req, res, next) => {
 
     mysql.getConnection((error, conn) =>{ 
-        conn.query('select * from pedidos inner join produtos on produtos.idproduto = pedidos.idproduto;', (error, results, fields) =>{
+        conn.query(`select * from pedidos inner join produtos on produtos.idproduto = pedidos.idproduto;`, (error, results, fields) =>{
             conn.release();
             if (error){
                 results.status(500).json({
@@ -25,7 +24,7 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.get('/:idpedidos', (req, res, next) => {
+router.get('/:idpedidos', autenticacao, (req, res, next) => {
     console.log('idpedidos: ',req.params.idpedido);
     mysql.getConnection((error, conn) =>{ 
         conn.query(`select * from pedidos  inner join produtos on produtos.idproduto = pedidos.idproduto where idpedidos = ${req.params.idpedidos };`, (error, results, fields) =>{
@@ -44,7 +43,7 @@ router.post('/', autenticacao, (req, res, next) => {
     console.log (req.body.nome, req.body.preco );
     mysql.getConnection((error, conn) =>{ 
         
-        conn.query('INSERT INTO pedidos (idproduto, quantidade) VALUES (?,?)', 
+        conn.query(`INSERT INTO pedidos (idproduto, quantidade) VALUES (?,?)`, 
         [req.body.idproduto, req.body.quantidade],  
         (error, resultado, field) =>{
                 conn.release();
@@ -93,7 +92,7 @@ router.delete('/', autenticacao, (req, res, next) => {
     console.log (req.body.idproduto);
 
     mysql.getConnection((error, conn) =>{ 
-        conn.query(`delete from pedidos where idpedido = ? ;`, 
+        conn.query(`DELETE from PEDIDOS where idpedido = ? ;`, 
         [req.body.idproduto],
         (error, resultado, field) =>{
                 conn.release();

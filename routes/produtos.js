@@ -4,10 +4,9 @@ const mysql   = require('../mysql').conn;
 const autenticacao  = require('./autenticacao');
 
 // select todos produtos
-router.get('/', (req, res, next) => {
-
+router.get('/', autenticacao, (req, res, next) => {
     mysql.getConnection((error, conn) =>{ 
-        conn.query('select * from produtos;', (error, results, fields) =>{
+        conn.query(`select * from produtos;`, (error, results, fields) =>{
             conn.release();
             if (error){
                 results.status(500).json({
@@ -24,15 +23,15 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.get('/:idproduto',   (req, res, next) => {
-    console.log('idproduto: ',req.params.idproduto);
+router.get('/:idproduto',  autenticacao, (req, res, next) => {
+    console.log ('idusuarios logado: ', req.email.idusuarios)
     mysql.getConnection((error, conn) =>{ 
-        conn.query('select * from produtos where idproduto = ${req.params.idproduto };', (error, results, fields) =>{
+        conn.query(`select * from produtos where idproduto = ${req.params.idproduto};`, (error, results, fields) =>{
             conn.release();
             if (error){
-                 res.status(500).json({error: error, response: null});
+                 res.status(500).json({response: null});
             } else {
-                 res.status(200).json({error: null, response: results});
+                 res.status(200).json({response: results});
             }
         });
     });
@@ -41,8 +40,8 @@ router.get('/:idproduto',   (req, res, next) => {
 // insert um produtos
 router.post('/', autenticacao, (req, res, next) => {
     mysql.getConnection((error, conn) =>{ 
-        conn.query('INSERT INTO produtos (nome, preco) VALUES (?,?)', 
-        [req.body.nome, req.body.preco],  
+        conn.query(`INSERT INTO produtos (nome, preco, userid) VALUES (?,?,?)`, 
+        [req.body.nome, req.body.preco, req.email.idusuarios],  
         (error, resultado, field) =>{
                 conn.release();
                 if (error){
@@ -64,11 +63,10 @@ router.post('/', autenticacao, (req, res, next) => {
 
 // alterar um produtos
 router.patch('/', autenticacao, (req, res, next) => {
-    console.log (req.body.idproduto, req.body.nome, req.body.preco );
-
+    console.log (req.body.nome, req.body.preco, req.email.idusuarios, req.body.idproduto )
     mysql.getConnection((error, conn) =>{ 
-        conn.query(`UPDATE produtos set nome = ? , preco = ? where idproduto = ? ;`, 
-        [req.body.nome, req.body.preco, req.body.idproduto],
+        conn.query(`UPDATE produtos set nome = ? , preco = ? , userid = ? where idproduto = ? ;`, 
+        [req.body.nome, req.body.preco, req.email.idusuarios, req.body.idproduto ],
         (error, resultado, field) =>{
                 conn.release();
                 if (error){
@@ -79,7 +77,7 @@ router.patch('/', autenticacao, (req, res, next) => {
                 }
                 res.status(200).json({
                     mensagem: 'POST produto update',
-                    idproduto: resultado.idproduto
+                    idproduto: req.body.idproduto
                 });
             }
         )
@@ -87,10 +85,8 @@ router.patch('/', autenticacao, (req, res, next) => {
 });
 // delete um produtos
 router.delete('/', autenticacao,  (req, res, next) => {
-    console.log (req.body.idproduto);
-
     mysql.getConnection((error, conn) =>{ 
-        conn.query(`delete from produtos where idproduto = ? ;`, 
+        conn.query(`DELETE from PRODUTOS where idproduto = ? ;`, 
         [req.body.idproduto],
         (error, resultado, field) =>{
                 conn.release();
