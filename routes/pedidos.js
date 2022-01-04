@@ -1,6 +1,8 @@
 const express = require('express');
 const router  = express.Router();
 const mysql   = require('../mysql').conn;
+const autenticacao  = require('./autenticacao');
+
 
 // select todos produtos
 router.get('/', (req, res, next) => {
@@ -38,7 +40,7 @@ router.get('/:idpedidos', (req, res, next) => {
 });
 
 // insert um produtos
-router.post('/', (req, res, next) => {
+router.post('/', autenticacao, (req, res, next) => {
     console.log (req.body.nome, req.body.preco );
     mysql.getConnection((error, conn) =>{ 
         
@@ -64,7 +66,7 @@ router.post('/', (req, res, next) => {
 
 
 // alterar um produtos
-router.patch('/', (req, res, next) => {
+router.patch('/', autenticacao, (req, res, next) => {
     console.log (req.body.idpedidos,req.body.quantidade );
 
     mysql.getConnection((error, conn) =>{ 
@@ -87,7 +89,7 @@ router.patch('/', (req, res, next) => {
     });
 });
 // delete um produtos
-router.delete('/', (req, res, next) => {
+router.delete('/', autenticacao, (req, res, next) => {
     console.log (req.body.idproduto);
 
     mysql.getConnection((error, conn) =>{ 

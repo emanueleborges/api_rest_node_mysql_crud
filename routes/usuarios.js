@@ -1,8 +1,8 @@
-const express = require('express');
-const router  = express.Router();
-const mysql   = require('../mysql').conn;
-const bcrypt = require('bcrypt');
-
+const express   = require('express');
+const router    = express.Router();
+const mysql     = require('../mysql').conn;
+const bcrypt    = require('bcrypt');
+const jwt       = require('jsonwebtoken');
 
 router.post('/cadastro', (req, res, next) => {
     
@@ -48,17 +48,28 @@ router.post('/login', (req, res, next) => {
                     return res.status(500).send({ error: error }) 
                 }
                 if (results.length < 1){ 
-                    return res.status(401).send({ mensagem: 'Falha na Autenticação.'}) 
+                    return res.status(401).send({ mensagem: 'Falha na Autenticação 1.'}) 
                 }
-                bcrypt.compare(req.body.senha,results[0].SENHA, (err, result) => {
-                    if (err) {
-                        throw err
-                      } else if (!result) {
-                         return res.status(404).send({ mensagem: 'Falha na Autenticacao.' })
-                      } else {
-                        return res.status(200).send({ mensagem: 'Autenticado com sucesso.' }) 
-                      }
-            });
+                
+                bcrypt.compare(req.body.senha,results[0].SENHA, 
+                    function (err, result) {
+                        if (err) {  return res.status(404).send({ mensagem: 'Falha na Autenticacao 2.' }) }
+                        if (result) {
+                            const token = jwt.sign({
+                                idusuarios : results[0].idusuarios,
+                                 email: results[0].email
+                                }, 
+                                process.env.JWT_KEY,
+                                {
+                                    expiresIn: "1h"
+                                }
+                            );
+                            return res.status(200).send({ mensagem: 'Autenticado com sucesso.' , token: token })
+                        } else {
+                            return res.status(404).send({ mensagem: 'Falha na Autenticacao 3.' })
+                        }
+                    }
+                );
         });         
     });
 })

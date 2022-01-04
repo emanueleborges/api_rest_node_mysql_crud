@@ -1,3 +1,4 @@
+require('dotenv').config()
 //import bibliotecas
 const express       = require('express');
 const app           = express();
@@ -5,11 +6,10 @@ const morgan        = require('morgan');
 const bodyParser    = require('body-parser');
 const fs            = require('fs');
 const path          = require('path');
-//const cors          = require('cors');
 // importar rotas
 const rotaProdutos  = require('./routes/produtos');
 const rotaPedidos   = require('./routes/pedidos');
-const rotaUsuarios   = require('./routes/usuarios');
+const rotaUsuarios  = require('./routes/usuarios');
 
 
 // usar rotas
@@ -30,16 +30,16 @@ app.use('/produtos',rotaProdutos);
 app.use('/pedidos',rotaPedidos);
 app.use('/usuarios',rotaUsuarios);
 
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-    const erro = new Error('Rota n�o encontrada, informada ou inexistente');
+    const erro = new Error('Rota não encontrada, informada ou inexistente');
     erro.status(404);
     next(erro);
 });
 
 app.use((error, req, res, next) => {
     res.status(error.status || 500);
-       
         return res.send ({
             error: { 
                 mensagem:' Rota Não Encontrada ' //ou  error.message
@@ -50,7 +50,7 @@ app.use((error, req, res, next) => {
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin: *", "Access-Control-Allow-Headers","Access-Control-Allow-Headers", "Content-Type: application/json; charset=utf-8")
-  })
+})
 
   
 module.exports = app;
