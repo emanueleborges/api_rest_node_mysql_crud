@@ -1,3 +1,4 @@
 node_modules/
 log_acessos.log
 .env
+.env.example

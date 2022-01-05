@@ -18,6 +18,8 @@ router.get('/',  (req, res, next) => {
                    error: null, 
                    response: results
                 });
+                res.render("home_page");
+
             }
         });
     });
