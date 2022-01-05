@@ -14,5 +14,26 @@ conn.getConnection((err,connection)=> {
   console.log(`Banco de Dados`, conn.config.connectionConfig.database.toUpperCase(), `Connectado com Sucesso.`);
   connection.release();
 });
-   
+
+/*
+exports.execute = (query, params=[] ) => {
+  return new Promise((resolve, reject) => {
+    conn.getConnection((error, conn) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve(conn)
+        conn.query(query, params, (error, results, fields))
+        conn.release();
+        if (error){
+          reject(error)
+        } else {
+          resolve(error)
+        }
+      }
+    })
+  })
+}
+*/
+
 exports.conn = conn;

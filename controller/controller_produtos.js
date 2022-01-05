@@ -1,6 +1,14 @@
 const mysql   = require('../mysql').conn;
 
 exports.SelectProdutos = (req, res, next )=>{
+    /*
+    mysql.  ('select * from produtos;').then((result) => {
+        result.status(500).json({ error: error,response: null});
+    }).catch ((error) =>{
+        res.status(200).json({error: null,response: results});
+    })
+    */
+
     mysql.getConnection((error, conn) =>{ 
         conn.query(`select * from produtos;`, (error, results, fields) =>{
             conn.release();

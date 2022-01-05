@@ -1,6 +1,5 @@
 const express = require('express');
 const router  = express.Router();
-const mysql   = require('../mysql').conn;
 const autenticacao  = require('./autenticacao');
 const ProdutosController = require ('../controller/controller_produtos')
 
