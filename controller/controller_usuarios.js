@@ -47,19 +47,20 @@ exports.LoginUsuarios = (req, res, next ) => {
                 }
                 
                 bcrypt.compare(req.body.senha,results[0].SENHA, 
-                    function (err, result) {
+                    (err, result)=> {
+                        console.log (results)
                         if (err) {  return res.status(404).send({ mensagem: 'Falha na Autenticacao 2.' }) }
                         if (result) {
                             const token = jwt.sign({
                                 idusuarios : results[0].idusuarios,
-                                 email: results[0].email
+                                email: results[0].email
                                 }, 
                                 process.env.JWT_KEY,
                                 {
                                     expiresIn: "1h"
                                 }
                             );
-                            return res.status(200).send({ mensagem: 'Autenticado com sucesso.' , token: token })
+                            return res.status(200).send({ mensagem: 'Autenticado com sucesso.' , token: token  })
                         } else {
                             return res.status(404).send({ mensagem: 'Falha na Autenticacao 3.' })
                         }

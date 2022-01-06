@@ -15,7 +15,9 @@ exports.SelectProdutos = (req, res, next )=>{
             if (error){
                 results.status(500).json({ error: error,response: null});
             } else {
+               
                 res.status(200).json({error: null,response: results});
+
             }
         });
     });
@@ -35,9 +37,11 @@ exports.SelectUmProdutos = (req, res, next )=>{
 }
 
 exports.InsertProdutos = (req, res, next) =>{
+    console.log (req.file)
+
     mysql.getConnection((error, conn) =>{ 
-        conn.query(`INSERT INTO produtos (nome, preco, userid) VALUES (?,?,?)`, 
-        [req.body.nome, req.body.preco, req.email.idusuarios],  
+        conn.query(`INSERT INTO produtos (nome, preco, userid, imagem) VALUES (?,?,?,?)`, 
+        [req.body.nome, req.body.preco, req.email.idusuarios, req.file.path],  
         (error, resultado, field) =>{
                 conn.release();
                 if (error){
@@ -46,9 +50,23 @@ exports.InsertProdutos = (req, res, next) =>{
                         response: null
                     });
                 }
+                const response = {
+                    mensagem: 'POST produtos insert',
+                    ProdutoCriado: {
+                        idproduto : resultado.idproduto,
+                        nome: resultado.nome,
+                        preco: resultado.preco,
+                        imagem: req.file.imagem,
+                        request: {
+                            tipo: 'GET',
+                            url: 'http://localhost:3000/produtos'
+                        }
+                    }
+                };
+                console.log (response)
                 res.status(200).json({
                     mensagem: 'POST produtos insert',
-                    idproduto: resultado.idproduto
+                    idproduto: response
                 });
             }
         )

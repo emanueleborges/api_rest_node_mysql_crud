@@ -6,11 +6,17 @@ const morgan        = require('morgan');
 const bodyParser    = require('body-parser');
 const fs            = require('fs');
 const path          = require('path');
+
+
+//rota publica 
+const  public = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(public));
+
 // importar rotas
 const rotaProdutos  = require('./routes/produtos');
 const rotaPedidos   = require('./routes/pedidos');
 const rotaUsuarios  = require('./routes/usuarios');
-
+const res = require('express/lib/response');
 
 // usar rotas
 app.use(morgan('dev')); // monitor de rotas 
@@ -49,7 +55,13 @@ app.use((error, req, res, next) => {
 )
 
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin: *", "Access-Control-Allow-Headers","Access-Control-Allow-Headers", "Content-Type: application/json; charset=utf-8")
+    res.header("Access-Control-Allow-Origin: *", "Access-Control-Allow-Headers","Access-Control-Allow-Headers", "Content-Type: application/json; charset=utf-8");
+        
+    if (req.method === 'OPTIONS'){
+        res.header('Acess-Control-Allow-Methods', 'PUT, POST, GET, PATCH, DELETE');
+        return res.status(200).send({});
+    }
+
 })
 
   
