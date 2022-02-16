@@ -1,61 +1,65 @@
-
 const mysql   = require('../mysql').conn;
 
-exports.SelectPedidos  = (req, res, next) =>{
+exports.SelectPedidos = (req, res) =>{
     mysql.getConnection((error, conn) =>{ 
-        conn.query(`select * from pedidos inner join produtos on produtos.idproduto = pedidos.idproduto;`, (error, results, fields) =>{
-            conn.release();
+        conn.query(`select
+        pedidos.idpedidos,
+        pedidos.idproduto,
+        sum(pedidos.quantidade) quantidade ,
+        round(sum(pedidos.quantidade * produtos.preco),2) total,
+        produtos.nome,
+        produtos.preco
+    from
+        pedidos
+    inner join produtos on
+        produtos.idproduto = pedidos.idproduto
+    group by pedidos.idproduto
+    order by
+        4;`, 
+        (error, results, fields) =>{
+        conn.release();
             if (error){
-                results.status(500).json({
-                    mensagem: error,
-                    response: null
-                });
+                res.status(500).json({data: error});
             } else {
-                res.status(200).json({
-                   mensagem: 'lista de pedidos', 
-                   response: results
-                });
+                res.status(200).json({data: results});
+                console.log('Lista de Pedidos: ', results)
             }
         });
     });
 }
 
-exports.SelectUmPedidos = (req, res, next ) => {
+exports.SelectUmPedidos = (req, res) => {
     console.log('idpedidos: ',req.params.idpedido);
     mysql.getConnection((error, conn) =>{ 
-        conn.query(`select * from pedidos  inner join produtos on produtos.idproduto = pedidos.idproduto where idpedidos = ${req.params.idpedidos };`, (error, results, fields) =>{
+        conn.query(`select * from pedidos inner join produtos on produtos.idproduto = pedidos.idproduto where idpedidos = ${req.params.idpedido };`, (error, results) =>{
             conn.release();
             if (error){
-                 res.status(500).json({error: error, response: null});
+                res.status(500).json({error: error, response: null});
             } else {
-                 res.status(200).json({error: null, response: results});
+                res.status(200).json({data: results});
             }
         });
     });
 }
 
-exports.InsertPedidos = (req, res, next ) => {
+exports.InsertPedidos = (req, res) => {
     mysql.getConnection((error, conn) =>{ 
         conn.query(`INSERT INTO pedidos (idproduto, quantidade) VALUES (?,?)`, 
         [req.body.idproduto, req.body.quantidade],  
-        (error, resultado, field) =>{
+            (error, results) =>
+            {
                 conn.release();
                 if (error){
-                    return res.status(500).send({
-                        error: error,
-                        response: null
-                    });
+                    return res.status(500).send({error: error, response: null});
+                } else {
+                    res.status(200).send({mensagem: 'POST pedidos insert',data: results});
                 }
-                res.status(200).json({
-                    mensagem: 'POST pedidos insert',
-                    idproduto: resultado.idpedido
-                });
             }
         )
     });
 }
 
-exports.UpdatePedidos = (req, res, next ) => {
+exports.UpdatePedidos = (req, res) => {
     mysql.getConnection((error, conn) =>{ 
         conn.query(`UPDATE PEDIDOS set quantidade = ? where idpedidos = ?`, 
         [req.body.quantidade, req.body.idpedidos],
@@ -76,7 +80,7 @@ exports.UpdatePedidos = (req, res, next ) => {
     });
 }
 
-exports.DeletePedidos = (req, res, next ) => {
+exports.DeletePedidos = (req, res) => {
     mysql.getConnection((error, conn) =>{ 
         conn.query(`DELETE from PEDIDOS where idpedidos = ? ;`, 
         [req.body.idpedidos],

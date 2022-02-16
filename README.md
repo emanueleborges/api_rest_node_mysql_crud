@@ -7,3 +7,5 @@ git clone https://github.com/emanueleborges/api_rest_node_mysql_crud
 npm install
 
 npm start 
+
+### Emanuel Melo Borges 

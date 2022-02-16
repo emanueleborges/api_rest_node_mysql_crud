@@ -18,17 +18,13 @@ const fileFilter = (req, file, cb) => {
     } else{
         cb(null, false);
     }
-    
 };
-
-
-
 const upload  = multer({ storage: storage, fileFilter: fileFilter });
-
-router.get('/',                           ProdutosController.SelectProdutos);
-router.get('/:idproduto',                 ProdutosController.SelectUmProdutos);
-router.post('/', upload.single('produto_imagem'),   autenticacao,       ProdutosController.InsertProdutos);
-router.patch('/',           autenticacao, ProdutosController.UpdateProdutos);
-router.delete('/',          autenticacao, ProdutosController.DeleteProdutos);
+//rotas 
+router.get('/',                                         ProdutosController.SelectProdutos);
+router.get('/:idproduto',                               ProdutosController.SelectUmProdutos);
+router.post('/',                          autenticacao, ProdutosController.InsertProdutos);
+router.patch('/', upload.single('imagem'),autenticacao, ProdutosController.UpdateProdutos);
+router.delete('/',                        autenticacao, ProdutosController.DeleteProdutos);
 
 module.exports = router;
