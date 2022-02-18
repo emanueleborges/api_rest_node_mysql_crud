@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": "Back-End: Node js, Express, Mysql, Swagger, jsonwebtoken, Cors, Criptografia"
   },
-  "host": "localhost:3001",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
     "http"
@@ -13,10 +13,7 @@
   "paths": {
     "/produtos/": {
       "get": {
-         "tags": [
-              "Produto: Select"
-          ],
-        "description": "Lista de Produtos",
+        "description": "",
         "parameters": [],
         "responses": {
           "200": {
@@ -28,26 +25,22 @@
         }
       },
       "post": {
-        "tags": [
-              "Produtos: Insert "
-          ],
-        "description": " Produtos: insert ",
+        "description": "",
         "parameters": [
           {
-            "name": "name",
-            "type": "string",
+            "name": "body",
             "in": "body",
             "schema": {
               "type": "object",
               "properties": {
                 "token": {
-                  "example": "token"
+                  "example": "any"
                 },
                 "nome": {
-                  "example": "Descrição do Produto"
+                  "example": "any"
                 },
                 "preco": {
-                  "example": "99.99"
+                  "example": "any"
                 }
               }
             }
@@ -55,7 +48,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Inserido com Sucesso"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized"
@@ -66,49 +59,6 @@
         }
       },
       "patch": {
-         "tags": [
-              "Produtos: Update ID "
-          ],
-        "description": "Produtos: Update",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "token": {
-                  "example": "token"
-                },
-                "nome": {
-                  "example": "descricao nova "
-                },
-                "preco": {
-                  "example": "99,99"
-                },
-                "idproduto": {
-                  "example": "46"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK. Atualizado com Sucesso"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-              "Produtos: Delete ID "
-          ],
         "description": "",
         "parameters": [
           {
@@ -118,10 +68,16 @@
               "type": "object",
               "properties": {
                 "token": {
-                  "example": "token"
+                  "example": "any"
+                },
+                "nome": {
+                  "example": "any"
+                },
+                "preco": {
+                  "example": "any"
                 },
                 "idproduto": {
-                  "example": "57"
+                  "example": "any"
                 }
               }
             }
@@ -129,7 +85,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK. Deletado com Sucesso."
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
@@ -139,9 +98,6 @@
     },
     "/produtos/{idproduto}": {
       "get": {
-        "tags": [
-              "Pedidos: Select ID"
-          ],
         "description": "",
         "parameters": [
           {
@@ -159,13 +115,47 @@
             "description": "Internal Server Error"
           }
         }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "idproduto",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "example": "any"
+                },
+                "idproduto": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     },
     "/pedidos/": {
       "get": {
-        "tags": [
-              "Pedidos: SELECT "
-          ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -178,9 +168,6 @@
         }
       },
       "post": {
-          "tags": [
-              "Pedidos: INSERT "
-          ],
         "description": "",
         "parameters": [
           {
@@ -190,13 +177,13 @@
               "type": "object",
               "properties": {
                 "token": {
-                  "example": "token"
+                  "example": "any"
                 },
                 "idproduto": {
-                  "example": "57"
+                  "example": "any"
                 },
                 "quantidade": {
-                  "example": "10"
+                  "example": "any"
                 }
               }
             }
@@ -215,9 +202,6 @@
         }
       },
       "patch": {
-          "tags": [
-              "Pedidos: UPDATE "
-          ],
         "description": "",
         "parameters": [
           {
@@ -230,40 +214,6 @@
                   "example": "any"
                 },
                 "quantidade": {
-                  "example": "any"
-                },
-                "idpedidos": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "delete": {
-          "tags": [
-              "Pedidos: DELETE "
-          ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "token": {
                   "example": "any"
                 },
                 "idpedidos": {
@@ -288,9 +238,6 @@
     },
     "/pedidos/{idpedido}": {
       "get": {
-          "tags": [
-              "Pedidos: SELECT ID "
-          ],
         "description": "",
         "parameters": [
           {
@@ -308,26 +255,60 @@
             "description": "Internal Server Error"
           }
         }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "idpedido",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "example": "any"
+                },
+                "idpedidos": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     },
     "/usuarios/cadastro": {
       "post": {
-          "tags": [
-              "Users: INSERT "
-          ],
-        "description": "Cadastro de Usuários",
+        "description": "",
         "parameters": [
           {
             "name": "body",
             "in": "body",
             "schema": {
-              "type": "string",
+              "type": "object",
               "properties": {
                 "email": {
-                  "example": "email@gmail.com"
+                  "example": "any"
                 },
                 "senha": {
-                  "example": "Senha123456"
+                  "example": "any"
                 }
               }
             }
@@ -346,26 +327,51 @@
         }
       }
     },
-    "/usuarios/login": {
+    "/usuarios/enviarsenha": {
       "post": {
-          "tags": [
-              "Users: LOGIN JWT TOKEN CRYPTO "
-          ],
-        "description": "Login Usuário",
+        "description": "",
         "parameters": [
           {
             "name": "body",
             "in": "body",
-             "required": false,
-            
             "schema": {
               "type": "object",
               "properties": {
                 "email": {
-                  "example": "email@gmail.com"
+                  "example": "emanuel.eborges@gmail.com"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Email Enviado com Sucesso."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/usuarios/login": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
                 },
                 "senha": {
-                  "example": "Senha123456"
+                  "example": "any"
                 }
               }
             }

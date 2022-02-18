@@ -1,5 +1,7 @@
 const mysql = require('mysql')
 
+console.log('Conectando ...');
+
 var conn = mysql.createPool({
     user: process.env.MYSQL_USER,
     database: process.env.MYSQL_DATABASE,
@@ -10,9 +12,9 @@ var conn = mysql.createPool({
 
 conn.getConnection((err,connection)=> {
   if(err){
-    console.log('Sem Conexão com o Banco de Dados',err);
+    console.log('Banco de Dados Sem Conexão. Erro: ',err.code);
   } else {
-    console.log(`Banco de Dados`, conn.config.connectionConfig.database.toUpperCase(), connection.state  , ` com Sucesso.`);
+    console.log(`Banco de Dados [`, conn.config.connectionConfig.database, `] Conectado.`);
   }
 });
 exports.conn = conn;

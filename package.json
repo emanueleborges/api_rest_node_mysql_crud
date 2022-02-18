@@ -2,10 +2,10 @@
   "name": "rest-api",
   "version": "1.0.0",
   "description": "Rest Api",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
-    },
+  },
   "keywords": [
     "Rest",
     "Api",
@@ -25,6 +25,9 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
     "mysql": "^2.18.1",
+    "node-mysql": "^0.4.2",
+    "nodemailer": "^6.7.2",
+    "nodemailer-smtp-transport": "^2.7.4",
     "parse-url": "^5.0.7",
     "swagger-ui-express": "^4.3.0",
     "web-sniffer-js": "^1.1.6"

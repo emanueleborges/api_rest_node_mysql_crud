@@ -1,6 +1,46 @@
 const mysql     = require('../mysql').conn;
 const bcrypt    = require('bcrypt');
 const jwt       = require('jsonwebtoken');
+const sendgmail = require('nodemailer');
+
+exports.EnviarSenhaUsuarios = (req, res, next)=>{
+    mysql.getConnection((error, conn) =>{ 
+        if (error) {
+            return res.status(500).send({ error: error })
+        }
+        conn.query(`Select * from usuarios where email = ? ;`,
+        [req.body.email],
+        (error, results) => {
+            conn.release();
+            if (error) {
+                return res.status(500).send({ error: error });
+            }
+            if (results) {
+                const smtpConfig = sendgmail.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: 'emanuel.eborges@gmail.com',
+                                pass: 'Emanuel@56658354200'
+                            }
+                });
+                const mailOptions = {
+                            from: 'noreply@gmail.com',
+                            to: req.body.email,
+                            subject: 'Recuperação de Senha',
+                            text: 'Teste de envio de email.'
+                };
+                smtpConfig.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + JSON.stringify(info));
+                        return res.status(201).send({ mensagem: 'email enviado com sucesso' });
+                    }
+                });
+            }
+        });
+    });
+}
 
 
 exports.CadastroUsuarios = (req, res, next)=>{
@@ -45,15 +85,13 @@ exports.LoginUsuarios = (req, res, next ) => {
                 if (results.length < 1){ 
                     return res.status(401).send({ mensagem: 'Falha na Autenticação 1.'}) 
                 }
-                
                 bcrypt.compare(req.body.senha,results[0].SENHA, 
                     (err, result)=> {
-                        console.log (results)
                         if (err) {  return res.status(404).send({ mensagem: 'Falha na Autenticacao 2.' }) }
                         if (result) {
                             const token = jwt.sign({
                                 idusuarios : results[0].idusuarios,
-                                email: results[0].email
+                                email: results[0].email,
                                 }, 
                                 process.env.JWT_KEY,
                                 {

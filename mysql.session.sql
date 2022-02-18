@@ -1,1 +1,1 @@
-select * from pedidos;
+select * from usuarios;
