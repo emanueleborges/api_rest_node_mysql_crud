@@ -20,7 +20,7 @@ exports.EnviarSenhaUsuarios = (req, res, next)=>{
                             service: 'gmail',
                             auth: {
                                 user: 'emanuel.eborges@gmail.com',
-                                pass: 'Emanuel@56658354200'
+                                pass: 'minhasenha'
                             }
                 });
                 const mailOptions = {
