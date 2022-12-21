@@ -1,4 +1,4 @@
-const mysql   = require('../mysql').conn;
+const mysql  = require('./../config/index');
 
 exports.SelectPedidos = (req, res) =>{
     mysql.getConnection((error, conn) =>{ 

@@ -1,8 +1,10 @@
-const http =  require('http');
-const app  = require('./app');
+const http = require('http');
+const app  = require('./src/app');
 const port = process.env.PORT || 3000;
-//const port = process.env.NODE_ENV === 'production' ? 80 : 3000;
+const { sequelize } = require('./src/models')
 const server = http.createServer(app);
-server.listen(port, () => {
-    console.log(`Servidor Rodando: http://localhost:${port}`);
+sequelize.sync().then(() => {
+    server.listen(port, () => {
+        console.log(`Servidor Rodando: http://localhost:${port}`);
+    })
 });

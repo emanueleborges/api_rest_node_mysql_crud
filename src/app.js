@@ -1,16 +1,12 @@
-require('dotenv').config()
 //import bibliotecas
 const express       = require('express');
 const app           = express();
-//const morgan        = require('morgan');
 const bodyParser    = require('body-parser');
 const fs            = require('fs');
 const path          = require('path');
 const cors          = require('cors') 
 const res           = require('express/lib/response');
 const swaggerUi     = require('swagger-ui-express');
-
-//var accessLogStream = fs.createWriteStream(path.join(__dirname, 'log_acessos.log'), { flags: 'a' })
 
 //rota publica 
 const  public = path.join(__dirname, 'uploads');
@@ -46,7 +42,7 @@ app.use((error, req, res, next) => {
     } 
 )
 // swagger documentacao api rest 
-const swaggerFile = require('./swagger/swagger_auto_2.json');
+const swaggerFile = require('../swagger/swagger_auto_2.json');
 app.use('/',  swaggerUi.serve,  swaggerUi.setup(swaggerFile));
 
 app.use(function(req, res, next) {

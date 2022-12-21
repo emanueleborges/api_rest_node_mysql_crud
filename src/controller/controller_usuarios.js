@@ -1,4 +1,4 @@
-const mysql     = require('../mysql').conn;
+const mysql  = require('./../config/index');
 const bcrypt    = require('bcrypt');
 const jwt       = require('jsonwebtoken');
 const sendgmail = require('nodemailer');

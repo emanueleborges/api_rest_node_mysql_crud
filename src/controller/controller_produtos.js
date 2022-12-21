@@ -1,4 +1,4 @@
-const mysql   = require('../mysql').conn;
+const mysql  = require('./../config/index');
 
 exports.SelectProdutos = async (req, res)=>{
     await mysql.getConnection((error, conn) =>{ 
