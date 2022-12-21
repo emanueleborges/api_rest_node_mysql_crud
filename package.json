@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "swagger": "node swagger.js"
   },
   "keywords": [
     "Rest",
@@ -33,6 +34,7 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "parse-url": "^5.0.7",
     "sequelize": "^6.28.0",
+    "swagger-autogen": "^2.22.0",
     "swagger-ui-express": "^4.3.0",
     "web-sniffer-js": "^1.1.6"
   },

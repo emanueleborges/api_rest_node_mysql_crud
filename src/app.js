@@ -10,11 +10,8 @@ const swaggerUi     = require('swagger-ui-express');
 
 //rota publica 
 const  public = path.join(__dirname, 'uploads');
-
 // importar rotas
-const rotaProdutos  = require('./routes/produtos');
-const rotaPedidos   = require('./routes/pedidos');
-const rotaUsuarios  = require('./routes/usuarios');
+const routes = require('./routes/index')
 const { redirect }  = require('express/lib/response');
 
 // usar rotas
@@ -29,10 +26,6 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,PATCH, DELETE');
     next();
 });
-//rotas app
-app.use('/produtos',rotaProdutos);
-app.use('/pedidos' ,rotaPedidos);
-app.use('/usuarios',rotaUsuarios);
 app.use(bodyParser.json());
 app.use((error, req, res, next) => {
     res.status(error.status || 302);
@@ -41,15 +34,14 @@ app.use((error, req, res, next) => {
         })
     } 
 )
-// swagger documentacao api rest 
-const swaggerFile = require('../swagger/swagger_auto_2.json');
+const swaggerFile = require('../swagger_auto.json');
 app.use('/',  swaggerUi.serve,  swaggerUi.setup(swaggerFile));
-
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin: *", "Access-Control-Allow-Headers","Access-Control-Allow-Headers", "Content-Type: application/json;");
-    //if (req.method === 'OPTIONS'){
         res.header('Acess-Control-Allow-Methods', 'PUT, POST, GET, PATCH, DELETE');
         return res.status(200).send({});
-    //}
 })
+
+app.use( routes)
+
 module.exports = app;
